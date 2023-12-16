@@ -1,4 +1,3 @@
-
 from selenium.webdriver.common.by import By
 #import ActionChains and WebDriverWait and EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -12,27 +11,41 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 import openai
 from selenium import webdriver
-from auto_influencer.prompts import prompts
 
+# service = ChromeService(executable_path=ChromeDriverManager().install())
 
 
 
 class InstaBot():
-    def __init__(self, driver, email, password):
-        self.driver:webdriver.Chrome = driver
-        self.email = email
-        self.password = password
+    def __init__(self):
+        self.driver = None
 
 
 
-    def login(self):
+
+
+    def open_insta(self, fullScreen: bool = False):
+        # if not self.driver:
+            self.driver = webdriver.Firefox()
+            self.driver.get('https://www.instagram.com')
+            if fullScreen:
+                self.driver.maximize_window()
+            time.sleep(5)
+
+
+
+
+    def login(self, email, password):
+        time.sleep(3)
         email_input = self.driver.find_element(By.CSS_SELECTOR, '#loginForm > div > div:nth-child(1) > div > label > input')
-        email_input.send_keys(self.email)
+        email_input.send_keys(email)
         password_input = self.driver.find_element(By.CSS_SELECTOR, '#loginForm > div > div:nth-child(2) > div > label > input')
-        password_input.send_keys(self.password)
+        password_input.send_keys(password)
         time.sleep(1)
         login_button = self.driver.find_element(By.CSS_SELECTOR, '#loginForm > div > div:nth-child(3) > button')
         login_button.click()
+        time.sleep(5)
+        return True
 
 
     def _search(self):
@@ -40,6 +53,10 @@ class InstaBot():
         search_icon.click()
 
     def copy_images(self, accounts_to_copy, path_to_save_images):
+        if self.driver == None:
+            print('driver not initialized')
+            return
+        time.sleep(2)
         self._search()
         time.sleep(2)
 
@@ -126,6 +143,14 @@ class InstaBot():
                 print('error', e)
                 self._search()
                 continue
+
+
+    def preform(self, accounts_to_copy, path_to_save_images):
+        time.sleep(10)
+        self.login()
+        time.sleep(10)
+        self.copy_images(accounts_to_copy, path_to_save_images)
+
 
 
 
