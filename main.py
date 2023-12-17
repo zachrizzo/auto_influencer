@@ -94,6 +94,7 @@ def main():
 
     prompt = st.text_input("Enter a prompt for image generation:", value="")
 
+
     number_of_images_col, performance_col = st.columns([1, 1])
 
     with performance_col:
@@ -110,6 +111,7 @@ def main():
         if use_img_prompt:
 
             model_face_path = st.text_input("Enter the path your model's face photo:", value='/Users/zachrizzo/programing/ai_influencer/Fooocus/outputs/sophoie/face.png')
+
             if os.path.isfile(model_face_path):
                 st.image(model_face_path, caption='Model Face', width=300)
             #slider for weight of model face
@@ -153,11 +155,14 @@ def main():
             generator = ImageGenerator()
             if continuous_img_gen:
                 # Start a new thread to run the async function
-                args = (prompt, negative_prompt, performance, number_of_images, use_img_prompt, model_face_path, model_face_stop_at_face, model_face_weight_face, img_path, img_prompt_stop_at_img1, img_prompt_weight_img_1)
-                thread = Thread(target=run_async_function, args=(generator,) + args)
-                thread.start()
-                thread.join()  # Wait for the async function to complete
+                # args = (prompt, negative_prompt, performance, number_of_images, use_img_prompt, model_face_path, model_face_stop_at_face, model_face_weight_face, img_path, img_prompt_stop_at_img1, img_prompt_weight_img_1)
+                # thread = Thread(target=run_async_function, args=(generator,) + args)
+                # thread.start()
+                # thread.join()  # Wait for the async function to complete
                 # You might want to handle the results or state updates here
+                full_screen = False
+                generator.continuous_img_gen_using_ui(full_screen,prompt, negative_prompt, performance, number_of_images, use_img_prompt, model_face_path, model_face_stop_at_face, model_face_weight_face, img_path, img_prompt_stop_at_img1, img_prompt_weight_img_1)
+
             else:
                 image_path = generator.generate_image(prompt, image_path=model_face_path)
                 st.success('Image generated!')
